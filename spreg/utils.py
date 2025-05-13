@@ -717,22 +717,22 @@ def set_endog_sparse(y, x, w, yend, q, w_lags, lag_q):
     """
     Same as set_endog, but with a sparse object passed as weights instead of W object.
     """
-    yl = w * y
+    yl = w @ y
     # spatial and non-spatial instruments
     if issubclass(type(yend), np.ndarray):
         if lag_q:
             lag_vars = sphstack(x, q)
         else:
             lag_vars = x
-        spatial_inst = w * lag_vars
+        spatial_inst = w @ lag_vars
         for i in range(w_lags - 1):
             spatial_inst = sphstack(spatial_inst, w * spatial_inst)
         q = sphstack(q, spatial_inst)
         yend = sphstack(yend, yl)
     elif yend == None:  # spatial instruments only
-        q = w * x
+        q = w @ x
         for i in range(w_lags - 1):
-            q = sphstack(q, w * q)
+            q = sphstack(q, w @ q)
         yend = yl
     else:
         raise Exception("invalid value passed to yend")
