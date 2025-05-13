@@ -954,7 +954,7 @@ def white(reg):
     # Compute cross-products and squares of the regression variables
     if type(X).__name__ == "ndarray":
         A = np.zeros((n, (k * (k + 1)) // 2))
-    elif type(X).__name__ == "csc_matrix" or type(X).__name__ == "csr_matrix":
+    elif type(X).__name__[:4] == "csc_" or type(X).__name__[:4] == "csr_":
         # this is probably inefficient
         A = SP.lil_matrix((n, (k * (k + 1)) // 2))
     else:
@@ -991,7 +991,7 @@ def white(reg):
     # Now the identified columns must be removed
     if type(A).__name__ == "ndarray":
         A = np.delete(A, omitcolumn, 1)
-    elif type(A).__name__ == "csc_matrix" or type(A).__name__ == "csr_matrix":
+    elif type(A).__name__[:4] == "csc_" or type(A).__name__[:4] == "csr_":
         # this is probably inefficient
         keepcolumn = list(range(k))
         for i in omitcolumn:
