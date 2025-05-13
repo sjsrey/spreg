@@ -160,7 +160,7 @@ def surLMe(n_eq, WS, bigE, sig):
 
     """
     # spatially lagged residuals
-    WbigE = WS * bigE
+    WbigE = WS @ bigE
     # score
     EWE = np.dot(bigE.T, WbigE)
     sigi = la.inv(sig)
@@ -173,9 +173,9 @@ def surLMe(n_eq, WS, bigE, sig):
     score.resize(1, n_eq)
 
     # trace terms
-    WW = WS * WS
+    WW = WS @ WS
     trWW = np.sum(WW.diagonal())
-    WTW = WS.T * WS
+    WTW = WS.T @ WS
     trWtW = np.sum(WTW.diagonal())
     # denominator
     SiS = sigi * sig
@@ -222,7 +222,7 @@ def surLMlag(n_eq, WS, bigy, bigX, bigE, bigYP, sig, varb):
     """
     # Score
     Y = np.hstack([bigy[r] for r in range(n_eq)])
-    WY = WS * Y
+    WY = WS @ Y
     EWY = np.dot(bigE.T, WY)
     sigi = la.inv(sig)
     SEWE = sigi * EWY
@@ -231,9 +231,9 @@ def surLMlag(n_eq, WS, bigy, bigX, bigE, bigYP, sig, varb):
 
     # I(rho,rho) as partitioned inverse, eq 72
     # trace terms
-    WW = WS * WS
+    WW = WS @ WS
     trWW = np.sum(WW.diagonal())  # T1
-    WTW = WS.T * WS
+    WTW = WS.T @ WS
     trWtW = np.sum(WTW.diagonal())  # T2
 
     # I(rho,rho)
@@ -241,7 +241,7 @@ def surLMlag(n_eq, WS, bigy, bigX, bigE, bigYP, sig, varb):
     Tii = trWW * np.identity(n_eq)  # T1It
     tSiS = trWtW * SiS
     firstHalf = Tii + tSiS
-    WbigYP = WS * bigYP
+    WbigYP = WS @ bigYP
     inner = np.dot(WbigYP.T, WbigYP)
     secondHalf = sigi * inner
     Ipp = firstHalf + secondHalf  # eq. 75
