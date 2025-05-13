@@ -71,12 +71,12 @@ def spmultiply(a, b, array_out=True):
 
     if type(a).__name__ == "ndarray" and type(b).__name__ == "ndarray":
         ab = a * b
-    elif (type(a).__name__ == "csr_matrix" or type(a).__name__ == "csc_matrix") and (
-        type(b).__name__ == "csr_matrix" or type(b).__name__ == "csc_matrix"
+    elif (type(a).__name__[:4] == "csr_" or type(a).__name__[:4] == "csc_") and (
+        type(b).__name__[:4] == "csr_" or type(b).__name__[:4] == "csc_"
     ):
         ab = a.multiply(b)
         if array_out:
-            if type(ab).__name__ == "csc_matrix" or type(ab).__name__ == "csr_matrix":
+            if type(ab).__name__[:4] == "csc_" or type(ab).__name__[:4] == "csr_":
                 ab = ab.toarray()
     else:
         raise Exception(
@@ -108,10 +108,10 @@ def sphstack(a, b, array_out=False):
     """
     if type(a).__name__ == "ndarray" and type(b).__name__ == "ndarray":
         ab = np.hstack((a, b))
-    elif type(a).__name__ == "csr_matrix" or type(b).__name__ == "csr_matrix":
+    elif type(a).__name__[:4] == "csr_" or type(b).__name__[:4] == "csr_":
         ab = SP.hstack((a, b), format="csr")
         if array_out:
-            if type(ab).__name__ == "csr_matrix":
+            if type(ab).__name__[:4] == "csr_":
                 ab = ab.toarray()
     else:
         raise Exception(
@@ -144,12 +144,12 @@ def spbroadcast(a, b, array_out=False):
     """
     if type(a).__name__ == "ndarray" and type(b).__name__ == "ndarray":
         ab = a * b
-    elif type(a).__name__ == "csr_matrix":
+    elif type(a).__name__[:4] == "csr_":
         b_mod = SP.lil_matrix((b.shape[0], b.shape[0]))
         b_mod.setdiag(b)
-        ab = (a.T * b_mod).T
+        ab = (a.T @ b_mod).T
         if array_out:
-            if type(ab).__name__ == "csr_matrix":
+            if type(ab).__name__[:4] == "csr_":
                 ab = ab.toarray()
     else:
         raise Exception(
