@@ -247,7 +247,7 @@ def get_A1_hom(s, scalarKP=False):
                       A1 matrix in scipy sparse format
     """
     n = float(s.shape[0])
-    wpw = s.T * s
+    wpw = s.T @ s
     twpw = np.sum(wpw.diagonal())
     e = SP.eye(n, n, format="csr")
     e.data = np.ones(int(n)) * (twpw / n)
