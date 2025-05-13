@@ -483,7 +483,7 @@ class spDcache:
     @property
     def j(self):
         if "j" not in self._cache:
-            wxb = self.w.sparse * self.reg.predy
+            wxb = self.w.sparse @ self.reg.predy
             wxb2 = np.dot(wxb.T, wxb)
             xwxb = spdot(self.reg.x.T, wxb)
             num1 = wxb2 - np.dot(xwxb.T, np.dot(self.reg.xtxi, xwxb))
@@ -703,7 +703,7 @@ def lm_wx(reg, w):
     except KeyError:
         xx = reg.x[:, reg._var_type == 'x']
     # WX
-    wx = w.sparse * xx
+    wx = w.sparse @ xx
     # end of preliminaries
     # X'W'u
     xtwtu = wx.T @ reg.u
@@ -748,13 +748,13 @@ def lm_spdurbin(reg,w):
         xx = reg.x[:, reg._var_type == 'x']
     k = x1.shape[1]
     # WX
-    wx = w.sparse * xx
+    wx = w.sparse @ xx
     # X1b
     xb = reg.predy
     # WX1b
-    wxb = w.sparse * xb
+    wxb = w.sparse @ xb
     # Wy
-    wy = w.sparse * reg.y
+    wy = w.sparse @ reg.y
     # y'W'e / sig2n
     drho = (wy.T @ reg.u) / reg.sig2n
     # X'W'e / sign2n

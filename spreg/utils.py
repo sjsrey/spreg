@@ -214,8 +214,8 @@ def get_A1_het(S):
                       A1 matrix in scipy sparse format
 
     """
-    StS = S.T * S
-    d = SP.spdiags([StS.diagonal()], [0], S.get_shape()[0], S.get_shape()[1])
+    StS = S.T @ S
+    d = SP.spdiags([StS.diagonal()], [0], S.shape[0], S.shape[1])
     d = d.asformat("csr")
     return StS - d
 
@@ -311,16 +311,16 @@ def _moments2eqs(A1, s, u):
 
     """
     n = float(s.shape[0])
-    A1u = A1 * u
-    wu = s * u
+    A1u = A1 @ u
+    wu = s @ u
     g1 = np.dot(u.T, A1u)
     g2 = np.dot(u.T, wu)
     g = np.array([[g1][0][0], [g2][0][0]]) / n
 
-    G11 = np.dot(u.T, ((A1 + A1.T) * wu))
-    G12 = -np.dot((wu.T * A1), wu)
-    G21 = np.dot(u.T, ((s + s.T) * wu))
-    G22 = -np.dot(wu.T, (s * wu))
+    G11 = np.dot(u.T, ((A1 + A1.T) @ wu))
+    G12 = -np.dot((wu.T @ A1), wu)
+    G21 = np.dot(u.T, ((s + s.T) @ wu))
+    G22 = -np.dot(wu.T, (s @ wu))
     G = np.array([[G11[0][0], G12[0][0]], [G21[0][0], G22[0][0]]]) / n
     return [G, g]
 
@@ -468,7 +468,7 @@ def get_spFilter(w, lamb, sf):
         ws = w
     T = sf.shape[0] // ws.shape[0]
     if T == 1:
-        result = sf - lamb * (ws * sf)
+        result = sf - lamb * (ws @ sf)
     else:
         result = sf - lamb * SP.kron(SP.identity(T), ws).dot(sf)
     return result
@@ -659,7 +659,7 @@ def power_expansion(
         max_iterations = 10000000
     while test > threshold and count <= max_iterations:
         if post_multiply:
-            increment = increment * ws * scalar
+            increment = increment @ ws * scalar
         else:
             increment = ws @ increment * scalar
         running_total += increment
