@@ -23,4 +23,4 @@ def symmetrize(w):
     Di12 = SPARSE.spdiags(1.0 / d, [0], w.n, w.n)
     D12 = SPARSE.spdiags(d, [0], w.n, w.n)
     w.transform = "r"
-    return D12 * w.sparse * Di12
+    return D12 @ w.sparse @ Di12
