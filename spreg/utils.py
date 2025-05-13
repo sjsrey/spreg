@@ -661,7 +661,7 @@ def power_expansion(
         if post_multiply:
             increment = increment * ws * scalar
         else:
-            increment = ws * increment * scalar
+            increment = ws @ increment * scalar
         running_total += increment
         test_old = test
         test = la.norm(increment)

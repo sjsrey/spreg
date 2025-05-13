@@ -31,14 +31,14 @@ def spdot(a, b, array_out=True):
     if type(a).__name__ == "ndarray" and type(b).__name__ == "ndarray":
         ab = np.dot(a, b)
     elif (
-        type(a).__name__ == "csr_matrix"
-        or type(b).__name__ == "csr_matrix"
-        or type(a).__name__ == "csc_matrix"
-        or type(b).__name__ == "csc_matrix"
+        type(a).__name__[:4] == "csr_"
+        or type(b).__name__[:4] == "csr_"
+        or type(a).__name__[:4] == "csc_"
+        or type(b).__name__[:4] == "csc_"
     ):
-        ab = a * b
+        ab = a @ b
         if array_out:
-            if type(ab).__name__ == "csc_matrix" or type(ab).__name__ == "csr_matrix":
+            if type(ab).__name__[:4] == "csc_" or type(ab).__name__[:4] == "csr_":
                 ab = ab.toarray()
     else:
         raise Exception(

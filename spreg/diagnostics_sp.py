@@ -495,7 +495,7 @@ class spDcache:
     @property
     def wu(self):
         if "wu" not in self._cache:
-            self._cache["wu"] = self.w.sparse * self.reg.u
+            self._cache["wu"] = self.w.sparse @ self.reg.u
         return self._cache["wu"]
 
     @property
@@ -508,14 +508,14 @@ class spDcache:
     @property
     def utwyDs(self):
         if "utwyDs" not in self._cache:
-            res = np.dot(self.reg.u.T, self.w.sparse * self.reg.y)
+            res = np.dot(self.reg.u.T, self.w.sparse @ self.reg.y)
             self._cache["utwyDs"] = res / self.reg.sig2n
         return self._cache["utwyDs"]
 
     @property
     def t(self):
         if "t" not in self._cache:
-            prod = (self.w.sparse.T + self.w.sparse) * self.w.sparse
+            prod = (self.w.sparse.T + self.w.sparse) @ self.w.sparse
             self._cache["t"] = np.sum(prod.diagonal())
         return self._cache["t"]
 
