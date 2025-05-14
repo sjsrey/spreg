@@ -215,7 +215,7 @@ def get_A1_het(S):
 
     """
     StS = S.T @ S
-    d = SP.spdiags([StS.diagonal()], [0], S.shape[0], S.shape[1])
+    d = SP.dia_matrix(([StS.diagonal()], [0]), shape=S.shape)
     d = d.asformat("csr")
     return StS - d
 
