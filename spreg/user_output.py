@@ -871,7 +871,8 @@ def check_constant(x, name_x=None, just_rem=False):
         if np.any(diffs == 0):
             x_constant = np.delete(x_constant, np.nonzero(diffs == 0), 1)
     else:
-        diffs = (x_constant.max(axis=0).toarray() - x_constant.min(axis=0).toarray())[0]
+        print(f'{x_constant.max(axis=0)=}')
+        diffs = (x_constant.max(axis=0).toarray() - x_constant.min(axis=0).toarray()).ravel()
         if np.any(diffs == 0):
             x_constant = x_constant[:, np.nonzero(diffs > 0)[0]]
 

@@ -415,20 +415,24 @@ class BaseGM_Endog_Error(RegressionPropsY):
     def __init__(self, y, x, yend, q, w, hard_bound=False):
 
         # 1a. TSLS --> \tilde{betas}
+        print('stage 1')
+        print(f'{y.shape=}, {x.shape=}, {yend.shape=}, {q.shape=}')
         tsls = TSLS.BaseTSLS(y=y, x=x, yend=yend, q=q)
         self.n, self.k = tsls.z.shape
         self.x = tsls.x
         self.y = tsls.y
         self.yend, self.z = tsls.yend, tsls.z
 
+
         # 1b. GMM --> \tilde{\lambda1}
         moments = _momentsGM_Error(w, tsls.u)
         lambda1 = optim_moments(moments, hard_bound=hard_bound)
-
+        print('stage 2')
         # 2a. 2SLS -->\hat{betas}
         xs = get_spFilter(w, lambda1, self.x)
         ys = get_spFilter(w, lambda1, self.y)
         yend_s = get_spFilter(w, lambda1, self.yend)
+        print(f'{ys.shape=}, {xs.shape=}, {yend_s.shape=}, {tsls.h.shape=}')
         tsls2 = TSLS.BaseTSLS(ys, xs, yend_s, h=tsls.h)
 
         # Output

@@ -30,6 +30,7 @@ def spdot(a, b, array_out=True):
     """
     if type(a).__name__ == "ndarray" and type(b).__name__ == "ndarray":
         ab = np.dot(a, b)
+        print('spdot: ndarray np.dot called')
     elif (
         type(a).__name__[:4] == "csr_"
         or type(b).__name__[:4] == "csr_"
@@ -37,6 +38,7 @@ def spdot(a, b, array_out=True):
         or type(b).__name__[:4] == "csc_"
     ):
         ab = a @ b
+        print('spdot: sparse operator used')
         if array_out:
             if type(ab).__name__[:4] == "csc_" or type(ab).__name__[:4] == "csr_":
                 ab = ab.toarray()
@@ -106,9 +108,12 @@ def sphstack(a, b, array_out=False):
     ab          : array or sparse matrix
                   Horizontally stacked objects
     """
+
     if type(a).__name__ == "ndarray" and type(b).__name__ == "ndarray":
+        print(f'sphstack: ndarray')
         ab = np.hstack((a, b))
     elif type(a).__name__[:4] == "csr_" or type(b).__name__[:4] == "csr_":
+        print(f'sphstack: csr')
         ab = SP.hstack((a, b), format="csr")
         if array_out:
             if type(ab).__name__[:4] == "csr_":

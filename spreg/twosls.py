@@ -147,15 +147,21 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         self.kstar = yend.shape[1]
         # including exogenous and endogenous variables
         z = sphstack(self.x, yend)
-        if type(h).__name__ not in ["ndarray", "csr_matrix"]:
+        if type(h).__name__ not in ["ndarray", "csr_matrix", "csr_matrix_strict"]:
             # including exogenous variables and instrument
+            print(f'{type(h)=}')
             h = sphstack(self.x, q)
+            print(f'{type(q)=}')
+            print(f'{h.shape=}')
+            if q is None:
+                assert False
         self.z = z
         self.h = h
         self.q = q
         self.yend = yend
         # k = number of exogenous variables and endogenous variables
         self.k = z.shape[1]
+        print(f'Base2SLS {h.shape=}')
         hth = spdot(h.T, h)
 
         try:
@@ -168,10 +174,12 @@ class BaseTSLS(RegressionPropsY, RegressionPropsVM):
         factor_1 = np.dot(zth, hthi)
         factor_2 = np.dot(factor_1, zth.T)
         # this one needs to be in cache to be used in AK
-
+        print(f'{factor_2.shape=}')
+        print(f'{factor_2=}')
         try:
             varb = la.inv(factor_2)
         except:
+            raise
             raise Exception("Singular matrix Z'H(H'H)^-1H'Z - endogenous variable(s) may be part of X")
         
         factor_3 = np.dot(varb, factor_1)
